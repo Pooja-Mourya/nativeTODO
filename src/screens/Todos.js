@@ -7,6 +7,7 @@ import {
   Modal,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 import CustomInput from '../components/CustomInput';
 
@@ -17,15 +18,23 @@ const CustomDialog = ({visible, onClose, onDelete}) => {
       transparent={true}
       visible={visible}
       onRequestClose={onClose}>
-      <View style={{backgroundColor:'red'}}>
-        <View style={{}}>
-          <Text style={{}}>Delete this tasks ?</Text>
-          <View style={{}}>
-            <TouchableOpacity onPress={onDelete} style={{}}>
-              <Text style={{}}>Delete</Text>
+      <View style={styles.deleteModalView}>
+        <View
+          style={[
+            styles.deleteContainer,
+            {borderTopWidth: 3, borderTopColor: '#FF8303'},
+          ]}>
+          <Text style={styles.modalText}>Delete this tasks ?</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={onDelete}
+              style={[styles.actionButton, styles.updateButton]}>
+              <Text style={styles.buttonText}>Yes</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onClose} style={{}}>
-              <Text style={{}}>Cancel</Text>
+            <TouchableOpacity
+              onPress={onClose}
+              style={[styles.actionButton, styles.updateButton]}>
+              <Text style={styles.buttonText}>No</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -47,10 +56,15 @@ const Todos = () => {
   const [updatedAbout, setUpdatedAbout] = useState('');
 
   const handleCreateTodo = () => {
-    const newTodo = {title, about};
-    setTodos([...todos, newTodo]);
-    setTitle('');
-    setAbout('');
+    if (title && about) {
+      // Check if both title and about are not empty
+      const newTodo = {title, about};
+      setTodos([...todos, newTodo]);
+      setTitle('');
+      setAbout('');
+    } else {
+      Alert.alert('Please fill in both title and about fields.');
+    }
   };
 
   const handleDeleteTodo = () => {
@@ -97,16 +111,14 @@ const Todos = () => {
           />
         </View>
         <TouchableOpacity onPress={handleCreateTodo} style={styles.addButton}>
-          <Text style={{}}>
-            <Image
-              style={{
-                width: 20,
-                height: 20,
-                resizeMode: 'cover',
-              }}
-              source={require('../assets/Union.png')}
-            />
-          </Text>
+          <Image
+            style={{
+              width: 20,
+              height: 20,
+              resizeMode: 'cover',
+            }}
+            source={require('../assets/Union.png')}
+          />
         </TouchableOpacity>
       </View>
       {todos.length > 0 ? (
@@ -131,33 +143,46 @@ const Todos = () => {
                       setDialogVisible(true);
                     }}
                     style={{}}>
-                    <Text style={{}}>
-                      <Image
-                        style={{
-                          width: 25,
-                          height: 25,
-                          resizeMode: 'contain',
-                        }}
-                        source={require('../assets/croseicon.png.png')}
-                      />
-                    </Text>
+                    <Image
+                      style={{
+                        width: 30,
+                        height: 30,
+                        resizeMode: 'contain',
+                      }}
+                      source={require('../assets/croseicon.png.png')}
+                    />
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
               {openMenu && selectedTodoIndex === index && (
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
+                    style={[styles.actionButton, styles.updateButton]}>
+                    <Image
+                      style={{
+                        width: 20,
+                        height: 20,
+                        resizeMode: 'cover',
+                        margin: 10,
+                      }}
+                      source={require('../assets/i.png')}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
                     onPress={() => {
                       handleUpdateTodo(index);
                       setDialogVisibleUpdate(true);
                     }}
-                    style={styles.actionButton}>
-                    <Text style={{margin: 10}}>🖊</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => console.log('click for warning')}
-                    style={styles.actionButton}>
-                    <Text style={{margin: 10}}>💻</Text>
+                    style={[styles.actionButton, styles.updateButton]}>
+                    <Image
+                      style={{
+                        width: 20,
+                        height: 20,
+                        resizeMode: 'cover',
+                        margin: 10,
+                      }}
+                      source={require('../assets/Edit.png')}
+                    />
                   </TouchableOpacity>
                 </View>
               )}
@@ -167,12 +192,10 @@ const Todos = () => {
           contentContainerStyle={styles.todoList}
         />
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text
-            style={{borderWidth: 2, width: 100, borderColor: '#FF8303'}}></Text>
-          <Text style={{color: '#F0E3CA'}}>No tasks</Text>
-          <Text
-            style={{borderWidth: 2, width: 100, borderColor: '#FF8303'}}></Text>
+        <View style={styles.noTasksContainer}>
+          <View style={styles.border}></View>
+          <Text style={styles.noTasksText}>No tasks</Text>
+          <View style={styles.border}></View>
         </View>
       )}
       <CustomDialog
@@ -292,6 +315,8 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     marginBottom: 20,
+    color: '#F0E3CA',
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -325,11 +350,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
   },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -338,8 +359,8 @@ const styles = StyleSheet.create({
   updateButton: {
     backgroundColor: '#1B1A17',
     marginLeft: 10,
-    borderWidth:2,
-    borderColor:"#FF8303"
+    borderWidth: 2,
+    borderColor: '#FF8303',
   },
   cancelButton: {
     backgroundColor: '#d9534f',
@@ -360,5 +381,40 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  deleteModalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  deleteContainer: {
+    margin: 20,
+    backgroundColor: '#',
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  noTasksContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  border: {
+    borderWidth: 2,
+    borderColor: '#FF8303',
+    width: 100,
+    marginBottom: 10,
+  },
+  noTasksText: {
+    color: '#F0E3CA',
+    marginBottom: 10,
   },
 });
