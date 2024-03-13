@@ -10,6 +10,7 @@ const CustomInput = ({ placeholder, onChangeText, value, secureTextEntry }) => {
         style={styles.input}
         placeholder={placeholder}
         onChangeText={onChangeText}
+        placeholderTextColor="#F0E3CA" 
         value={value}
         secureTextEntry={secureTextEntry}
         onFocus={() => setIsFocused(true)}
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    color: '#FF8303',
+    color: '#F0E3CA',
     width: 250, // Ensure the input takes up full width
   },
 });
