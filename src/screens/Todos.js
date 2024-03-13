@@ -133,7 +133,9 @@ const Todos = () => {
                   selectedTodoIndex === index && styles.selectedTodoItem,
                 ]}>
                 <View style={{width: '90%'}}>
-                  <Text style={styles.content}>Title: {item.title}</Text>
+                  <Text style={[styles.content, {fontSize: 25}]}>
+                    Title: {item.title}
+                  </Text>
                   <Text style={styles.content}>About: {item.about}</Text>
                 </View>
                 <View>
@@ -213,7 +215,6 @@ const Todos = () => {
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Update Todo</Text>
             <CustomInput
               placeholder="Updated Title"
               onChangeText={setUpdatedTitle}
@@ -223,15 +224,19 @@ const Todos = () => {
               placeholder="Updated About"
               onChangeText={setUpdatedAbout}
               value={updatedAbout}
+              multiline={true}
+              numberOfLines={4} // Adjust the number of lines as needed
+              style={styles.textArea} // Apply additional styles for text area if necessary
             />
-            <View style={styles.buttonContainer}>
+
+            <View style={[styles.buttonContainer, {justifyContent: 'center'}]}>
               <TouchableOpacity
                 onPress={() => {
                   handleSubmitUpdate(updatedTitle, updatedAbout);
                   setDialogVisibleUpdate(!dialogVisibleUpdate);
                 }}
                 style={[styles.actionButton, styles.updateButton]}>
-                <Text style={styles.buttonText}>Update</Text>
+                <Text style={styles.buttonText}>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setDialogVisibleUpdate(!dialogVisibleUpdate)}
@@ -416,5 +421,14 @@ const styles = StyleSheet.create({
   noTasksText: {
     color: '#F0E3CA',
     marginBottom: 10,
+  },
+  textArea: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10, // Adjust vertical padding as needed
+    height: 100, // Adjust the height as needed
   },
 });
